@@ -22,7 +22,7 @@ Upon investigating the output of [`SCDCalibratePanels`](https://github.com/manti
 - Confusing calibration log output
 
 Due to the high complexity of [`SCDCalibratePanels`](https://github.com/mantidproject/mantid/blob/master/Framework/Crystal/src/SCDCalibratePanels.cpp), it is difficult to resolve the issues found above.
-Therefore, a new version, [`SCDCalibratePanels2`], was created targeting the CORELLI instrument.
+Therefore, a new version, `SCDCalibratePanels2`, was created targeting the CORELLI instrument.
 As the CORELLI team does not have experiment data with know instrument position values, virtual diffraction based (synthetic data) unit test was used to assist the development of this new algorithm.
 
 
@@ -40,6 +40,14 @@ As the CORELLI team does not have experiment data with know instrument position 
 
 
 ## Unittest
+
+There are a total number of __five__ tests used to assist the development of `SCDCalibratePanels2`, including
+- `run_Null_Case`:  trivial case, no source nor bank movement.
+- `run_T0_Shift`: test if `SCDCalibratePanels2` can find T0 shift with zero source and bank movement. (note: `SCDCalibratePanels2` still cannot handle T0 calibration)
+- `run_L1_Shift`: test if `SCDCalibratePanels2` can find prescribed `$L_1$` shift
+
+
+> Note: There is a __3 min__ timeout limit configured for `ctest`, therefore the function name is changed from `test_*` to `run_*` once `SCDCalibratePanels2` passes the assocaited test.
 
 ## Calibration workflow
 
