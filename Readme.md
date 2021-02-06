@@ -44,12 +44,30 @@ As the CORELLI team does not have experiment data with know instrument position 
 There are a total number of __five__ tests used to assist the development of `SCDCalibratePanels2`, including
 - `run_Null_Case`:  trivial case, no source nor bank movement.
 - `run_T0_Shift`: test if `SCDCalibratePanels2` can find T0 shift with zero source and bank movement. (note: `SCDCalibratePanels2` still cannot handle T0 calibration)
-- `run_L1_Shift`: test if `SCDCalibratePanels2` can find prescribed `$L_1$` shift
+- `run_L1_Shift`: test if `SCDCalibratePanels2` can find prescribed L1 shift with zero bank movement.
+- `run_bank_moved`: test if `SCDCalibratePanels2` can find prescirbed movement of a single bank (zero source movement)
+- `test_Exec`: overall test of `SCDCalibratePanels2` where the source and two banks are moved.
 
+> Note:  
+> - There is a __3 min__ timeout limit configured for `ctest`, therefore the function name is changed from `test_*` to `run_*` once `SCDCalibratePanels2` passes the assocaited test.  
+> - `test_Exec` is the main test running on build server.
 
-> Note: There is a __3 min__ timeout limit configured for `ctest`, therefore the function name is changed from `test_*` to `run_*` once `SCDCalibratePanels2` passes the assocaited test.
+All unit tests follow the following workflow.
+
+![SCDCalibratePanels2Test Overview](figures/unittest_overview.png)
+
 
 ## Calibration workflow
 
 
-# Focused discussion point
+# Discussion point
+
+## [`SCDCalibratePanels2Test.h`](src/SCDCalibratePanels2Test.h)
+
+- In the constructor `SCDCalibratePanels2Test()`, we need to call `LoadIsawPeaks` once to avoid strange `algorithm not found error` for the rest of the module.
+  The mechanism behind this hack is still unclear.
+-  
+
+## [`SCDCalibratePanels2.cpp`](src/SCDCalibratePanels2.cpp)
+
+## [`SCDCalibratePanels2ObjFunc.cpp`](src/SCDCalibratePanels2ObjFunc.cpp)
