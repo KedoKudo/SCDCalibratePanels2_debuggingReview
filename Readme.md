@@ -66,12 +66,21 @@ The overall calibration procedure is as straight forward as other algorithms.
 The most important functions in `exec()` are
 - `optimizeL1()`
 - `optimizeBanks()`
-
 > Note: due to unknown issue, `optimizeT0()` always returns zero output with current unittest.
 
-### `optimizeL1()`
+Both `optimizeL1()` and `optimizeBanks()` follow a similar workflow with the following differences:
 
-### `optimizeBanks()`
+|             | `optimizeL1()` | `optimizeBanks()` |
+|:----        |:--------------:|:-----------------:|
+| peaks       | use all peaks avaialble | peaks are partitioned based on Bank |
+| thread      | single thread calculation | `OpenMP` is used |
+| component   | source only    | corresponding bank |
+| constraints | z motion only  | all five degree of freedom |
+
+The common workflow is shown below
+
+![optimizer_overview](figures/optimizer_overview.png)
+
 
 
 # Discussion points
@@ -94,3 +103,7 @@ The most important functions in `exec()` are
 
 - Does Mantid provide a straight forward way to query all banks names other than asking each individual peaks and tabulating the results?
 ## [`SCDCalibratePanels2ObjFunc.cpp`](src/SCDCalibratePanels2ObjFunc.cpp)
+
+- The original version has a weired first order derivative function, [functionDeriv1D()](https://github.com/mantidproject/mantid/blob/91cbdaa813527d00fb15700035c20c9f456bd678/Framework/Crystal/src/SCDPanelErrors.cpp#L260), which is causing the optimizatio drifting in a very erratic way. The function was removed in the newer version and somehow the unittest can produce reliable outcome that is close to numerical precision.
+- The current way of generating calculated qSample feels very awkward, and different peak object instantiation is needed when dealing with source and banks.
+  - A better and unified peak objective instantiation is definitely needed here.
