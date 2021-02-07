@@ -59,15 +59,38 @@ All unit tests follow the following workflow.
 
 ## Calibration workflow
 
+The overall calibration procedure is as straight forward as other algorithms.
 
-# Discussion point
+![SCDCalibratePanels2 Overview](figures/SCDCalibratePanels2_overview.png)
+
+The most important functions in `exec()` are
+- `optimizeL1()`
+- `optimizeBanks()`
+
+> Note: due to unknown issue, `optimizeT0()` always returns zero output with current unittest.
+
+### `optimizeL1()`
+
+### `optimizeBanks()`
+
+
+# Discussion points
 
 ## [`SCDCalibratePanels2Test.h`](src/SCDCalibratePanels2Test.h)
 
 - In the constructor `SCDCalibratePanels2Test()`, we need to call `LoadIsawPeaks` once to avoid strange `algorithm not found error` for the rest of the module.
   The mechanism behind this hack is still unclear.
--  
+- Is it possible to lift the 3 min timeout constraints on ctest?
 
 ## [`SCDCalibratePanels2.cpp`](src/SCDCalibratePanels2.cpp)
 
+- Upon review, it seems like the lattice constants are not used (or used implicityly somehow?) in the main calibration process.
+  - Users often call `setUB` before calling `SCDCalibratePanels`, therefore do we still need the lattice constants as input parameters
+  - Version 1 always does a reindexation upon loading the lattice paramter, but this often leads to a `peaksworkspace contains non-indexed peak` error. What should we do in situations like this?
+  - When does Mantid compute the crystal orientation? My understanding is that `indexPeaks` helps finding the HKL, but does it also produce the crystal orientation (EulerAngle, uv pair, or even quaternion)?
+  - A quick test was performed where the lattice constants were forced set to the input peak workspace, and the issue still remains.
+
+- Why do we have to sort peaks?(@L236) I am keeping it here because version one states clearly that it is necessary, but the physics behind it was not documented.
+
+- Does Mantid provide a straight forward way to query all banks names other than asking each individual peaks and tabulating the results?
 ## [`SCDCalibratePanels2ObjFunc.cpp`](src/SCDCalibratePanels2ObjFunc.cpp)
