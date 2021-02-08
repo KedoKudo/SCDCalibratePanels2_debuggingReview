@@ -18,7 +18,7 @@ Upon investigating the output of [`SCDCalibratePanels`](https://github.com/manti
 
 - Unrealistic large bank movement (translation and rotation)
 - Drifting L1 calibration outcome with consecutive runs
-- Unnecessary redinexation during each evaluation of the objective function
+- Unnecessary re-indexation during each evaluation of the objective function
 - Confusing calibration log output
 
 Due to the high complexity of [`SCDCalibratePanels`](https://github.com/mantidproject/mantid/blob/master/Framework/Crystal/src/SCDCalibratePanels.cpp), it is difficult to resolve the issues found above.
